@@ -1042,7 +1042,12 @@
             const sorted = rows.slice().sort((a, b) => b.IRP - a.IRP).slice(0, 10);
             tbody.innerHTML = sorted.map(r => {
                 const nightPct = r.distance_used_km ? (r.night_km / r.distance_used_km * 100) : 0;
-                const nrPct = r.distance_used_km ? (r.non_routine_km / r.distance_used_km * 100) : 0;
+                const safeNonRoutineKm = Math.min(r.non_routine_km, r.distance_used_km);
+
+                const nrPct = r.distance_used_km
+                    ? (safeNonRoutineKm / r.distance_used_km) * 100
+                    : 0;
+
                 return `<tr>
       <td>${r.Vehículo}</td>
       <td>${fmt(r.IRP, 1)}</td>
